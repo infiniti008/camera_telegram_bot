@@ -1,5 +1,5 @@
 {
-  "name": "nodejs",
+  "name": "camera_bot",
   "version": "1.0.0",
   "description": "Telegramm bot to get photo from phone camera",
   "main": "index.js",
