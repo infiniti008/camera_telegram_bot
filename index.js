@@ -37,6 +37,20 @@ function start_bot(){
     });
     
     
+    bot.onText(/\/hel/, function (msg, match) {
+        var chatId = msg.chat.id;
+        bot.sendMessage(chatId, 'sdasdas');
+    
+    
+    const { execFile } = require('child_process');
+    const child = execFile('sh', [__dirname + '/sc.sh'], (error, stdout, stderr) => {
+    if (error) {
+    throw error;
+    }
+    console.log(stdout);
+});
+});
+    
     // Listen for any kind of message. There are different kinds of
     // messages.
     bot.on('message', function (msg) {
