@@ -32,7 +32,7 @@ function start_bot(){
     
     bot.onText(/\/photo/, function (msg, match) {
         var chatId = msg.chat.id;
-        bot.sendMessage(chatId, 'sdasdas');
+        bot.sendMessage(chatId, 'Мы получили ваш запрос, обрабатывам...');
     
     
         var spawn = require('child_process').spawn;
@@ -62,7 +62,9 @@ function start_bot(){
     bot.on('message', function (msg) {
         var chatId = msg.chat.id;
         console.log(msg);
-        bot.sendMessage(chatId, 'Мы получили вашу ссылку, начинаем загрузку файла!');
+        if(!msg.entities){
+            bot.sendMessage(chatId, 'Мы получили ваше сообщение, но ничего сделать не можем. Выберите команду "/');
+        }
     });
 }
 
