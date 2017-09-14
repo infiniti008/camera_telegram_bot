@@ -63,7 +63,13 @@ function start_bot(){
         var chatId = msg.chat.id;
         console.log(msg);
         if(!msg.entities){
-            bot.sendMessage(chatId, 'Мы получили ваше сообщение, но ничего сделать не можем. Выберите команду "/');
+            var te='';
+            bot.sendMessage(chatId, 'Мы получили ваше сообщение, но ничего сделать не можем. Выберите команду из возможных:');
+            for(var j in command){
+                te += j + command[j] + '\n';
+            }
+            bot.sendMessage(chatId, te);
+            
         }
     });
 }
