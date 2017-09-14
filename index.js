@@ -5,9 +5,7 @@ var token = "268377689:AAEehpljdqiY6qITewLNPUkbe60Kbszl95w";
 var command = {
     '/echo':' - Команда ЭХО.',
     '/help':' - Справка о доступных командах.',
-    '/add_torrent':' - Функция добавления торрент файла для закачки.',
-    '/add_link':' - Функция загрузки файла по прямой ссылке.',
-    '/save_as':' - Функция Загрузки файла с указанием имени.'
+    '/photo':' - Получить фото.'
 };
 start_bot();
 
@@ -15,17 +13,12 @@ function start_bot(){
     var bot = new TelegramBot(token, { polling: true });
     console.log('We start telegramm bot!');
     
-    bot.onText(/\/echo (.+)/, function (msg, match) {
-        var chatId = msg.chat.id;
-        var resp = match[1];
-        bot.sendMessage(chatId, resp);
-    });
     
-    bot.onText(/\/save_as (.+) (.+)/, function (msg, match){
+    // bot.onText(/\/save_as (.+) (.+)/, function (msg, match){
     // 	var chatId = msg.chat.id;
    	//     save_name = match[1];
     //     linc[chatId] = match[2];
-    });
+    // });
     
     bot.onText(/\/help/, function (msg, match) {
         var help = 'Я умею выполнять следующие команды: \n';
@@ -37,19 +30,32 @@ function start_bot(){
     });
     
     
-    bot.onText(/\/hel/, function (msg, match) {
+    bot.onText(/\/photo/, function (msg, match) {
         var chatId = msg.chat.id;
         bot.sendMessage(chatId, 'sdasdas');
     
     
-    const { execFile } = require('child_process');
-    const child = execFile('sh', [__dirname + '/sc.sh'], (error, stdout, stderr) => {
-    if (error) {
-    throw error;
-    }
-    console.log(stdout);
-});
-});
+        var spawn = require('child_process').spawn;
+        const create_photo = spawn('echo \"am broadcast -a ru.meefik.linuxdeploy.BROADCAST_ACTION --es \"info\" \"create_photo\"\" | unchroot', {
+            stdio: 'inherit',
+            shell: true
+        });
+
+//     var spawn = require('child_process').spawn;
+//     const echo = spawn('echo "am start -n com.arlosoft.macrodroid/.LauncherActivity" | unchroot', {
+//   stdio: 'inherit',
+//   shell: true
+// });
+
+        create_photo.on('exit', function (code) {
+            console.log('child process exited with code ' + code);
+            read_dir(function(dir) {
+                console.log(dir);
+                bot.sendPhoto(chatId, __dirname + '/photo/' + dir[0]);
+                fs.unlinkSync( __dirname + '/photo/' + dir[0]);
+            });
+        });
+    });
     
     // Listen for any kind of message. There are different kinds of
     // messages.
@@ -57,5 +63,21 @@ function start_bot(){
         var chatId = msg.chat.id;
         console.log(msg);
         bot.sendMessage(chatId, 'Мы получили вашу ссылку, начинаем загрузку файла!');
+    });
+}
+
+function read_dir(cb){
+    fs.readdir(__dirname + '/photo', function(err, files) {
+        if (err) {
+           // some sort of error
+        } else {
+           if (!files.length) {
+               // directory appears to be empty
+               read_dir(cb);
+           }
+           else{
+               cb(files);
+           }
+        }
     });
 }
